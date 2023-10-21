@@ -1,10 +1,13 @@
-﻿namespace AdmhmaoPhoneBookBot.Services
+﻿using AdmhmaoPhoneBookBot.IOControl;
+
+namespace AdmhmaoPhoneBookBot.Services
 {
     public class PhoneBookUpdateService : BackgroundService
     {
-        public PhoneBookUpdateService()
+        private readonly InMemoryStorage _storage;
+        public PhoneBookUpdateService(InMemoryStorage storage)
         {
-            
+            _storage = storage;
         }
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)

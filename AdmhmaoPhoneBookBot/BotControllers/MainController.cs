@@ -5,6 +5,15 @@ using Telegram.Bot.Types.Enums;
 
 namespace AdmhmaoPhoneBookBot.BotControllers
 {
+    #region Records
+
+    public record WaitEnterFio();
+    public record WaitEnterPhone();
+    public record WaitEnterRoom();
+    public record WaitEnterPost();
+
+    #endregion
+
     public class MainController : BotController
     {
         private readonly InMemoryStorage _storage;
@@ -72,7 +81,7 @@ namespace AdmhmaoPhoneBookBot.BotControllers
         public async Task Start()
         {
             Reply();
-            PushL("Приветствую! Я помогу узнать расписание, воспользуйся панелью выбора");
+            PushL("Приветствую! Я помогу узнать контакты органов власти Ханты-Мансийского автономного округа – Югры, воспользуйся панелью выбора");
             await Send();
             await MainPanel();
         }
@@ -82,15 +91,99 @@ namespace AdmhmaoPhoneBookBot.BotControllers
         {
             await ClearState();
 
-            PushL($"<b>Расписание занятий</b>");
+            PushL($"<b>Телефонная книга</b>");
             PushL("");
-            PushL($"Сегодня {CTimezone.Current.ToString("dddd, dd MMMM", CultureParameters.DefaultRu)}");
+            PushL($"Общее количество контактов книги: {_storage.GetPhoneBook.Count}");
             PushL("");
             PushL(">");
             PushL();
 
+            RowButton("Поиск по фамилии", Q(SelectFio));
+            Button("Поиск по телефону", Q(SelectPhone));
+            RowButton("Поиск по кабинету", Q(SelectRoom));
+            Button("Поиск по должности", Q(SelectPost));
+            RowButton("Информация", Q(Information));
+
             if (!IsInitialized)
                 IsInitialized = true;
+        }
+
+        [Action]
+        public async Task SelectFio()
+        {
+            PushL($"<b>Введи фамилию для поиска</b>");
+            PushL("");
+            PushL("Примеры корректного ввода (регистр не учитывается)");
+            PushL("");
+            PushL("• <i>уткин</i>");
+            PushL("• <i>анатолий</i>");
+            PushL("• <i>валерьевич</i>");
+            PushL("• <i>анатолий валерьевич</i>");
+            PushL("• <i>уткин анатолий валерьевич</i>");
+            PushL("");
+            PushL(">");
+            PushL();
+
+            RowButton("Отмена", Q(MainPanel));
+
+            await State(new WaitEnterFio());
+        }
+
+        [State]
+        public async ValueTask EnterFio(WaitEnterFio _)
+        {
+
+        }
+
+        [Action]
+        public void SelectPhone()
+        {
+
+        }
+
+        [State]
+        public async ValueTask EnterPhone(WaitEnterPhone _)
+        {
+
+        }
+
+        [Action]
+        public void SelectRoom()
+        {
+
+        }
+
+        [State]
+        public async ValueTask EnterRoom(WaitEnterRoom _)
+        {
+
+        }
+
+        [Action]
+        public void SelectPost()
+        {
+
+        }
+
+        [State]
+        public async ValueTask EnterPost(WaitEnterPost _)
+        {
+
+        }
+
+        [Action]
+        public void Information()
+        {
+            PushL("<b>Информация</b>");
+            PushL("");
+            PushL("• Данные телефонной книги актуальны, пока <a href='https://admhmao.ru/organy-vlasti/telefonnyy-spravochnik-ogv-hmao/'>основной сервис</a> активен");
+            PushL("");
+            PushL("• Данный бот разработан <a href='https://t.me/Arvesso'>Arvesso</a>, специально для <b>Студенческого Диджитал Многоборья Югры 2023</b>");
+            PushL("");
+            PushL(">");
+            PushL();
+
+            RowButton("Вернуться", Q(MainPanel));
         }
     }
 }
