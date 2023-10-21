@@ -7,6 +7,7 @@
 
     public class Entity
     {
+        public int Id { get; set; } = 0;
         public string Fio { get; set; } = string.Empty;
         public string Post { get; set; } = string.Empty;
         public string Phone { get; set; } = string.Empty;

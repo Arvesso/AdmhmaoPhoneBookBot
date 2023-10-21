@@ -6,7 +6,7 @@ namespace AdmhmaoPhoneBookBot.IOControl
 {
     public class InMemoryStorage
     {
-        private const double SimilarityValue = 0.419; // Higher - more precisely search
+        private const double SimilarityValue = 0.41; // Higher - more precisely search
 
         private readonly string _phoneBookFolder;
         private readonly string _phoneBookFileName;
@@ -25,6 +25,24 @@ namespace AdmhmaoPhoneBookBot.IOControl
 
         public void AddEntityToPhoneBook(Entity entity) => PhoneBook.PhoneBook.Add(entity);
         public void ClearPhoneBook() => PhoneBook.PhoneBook.Clear();
+        public IEnumerable<Entity> FindBestMatches(string input)
+        {
+            IEnumerable<Entity> result;
+
+            if (string.IsNullOrEmpty(input))
+                return Enumerable.Empty<Entity>();
+
+            result = FindBestMatchesByFio(input);
+
+            if (!result.Any())
+                result = FindBestMatchesByPhone(input);
+            if (!result.Any())
+                result = FindBestMatchesByRoom(input);
+            if (!result.Any())
+                result = FindBestMatchesByPost(input);
+
+            return result;
+        }
         public IEnumerable<Entity> FindBestMatchesByFio(string input)
         {
             var list = GetPhoneBook;

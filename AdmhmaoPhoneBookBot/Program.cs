@@ -1,5 +1,7 @@
 global using ArveCore.Botf;
 global using ArveCore.Extensions;
+using AdmhmaoPhoneBookBot.IOControl;
+using AdmhmaoPhoneBookBot.Services;
 
 namespace AdmhmaoPhoneBookBot
 {
@@ -16,6 +18,10 @@ namespace AdmhmaoPhoneBookBot
             }
 
             var builder = WebApplication.CreateBuilder(args);
+
+            builder.Services.AddSingleton<InMemoryStorage>();
+            builder.Services.AddHostedService<AppRuntimeService>();
+            builder.Services.AddHostedService<PhoneBookUpdateService>();
 
             builder.Services.TryAddBotf(builder.Configuration.GetConnectionString("botf")!, default); //botf
 
